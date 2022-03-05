@@ -15,10 +15,9 @@ formulario.addEventListener('submit', nuevaCita);
 
 // Heading
 const heading = document.querySelector('#administra');
-let DB;
-
 let editando = false;
 
+let DB;
 window.onload = () => {
     eventListeners();
     crearDB();
@@ -96,10 +95,8 @@ class UI {
         }, 3000);
    }
 
-   imprimirCitas() { // Se puede aplicar destructuring desde la función...
-       
+   imprimirCitas() { // 
         this.limpiarHTML();
-
         this.textoHeading(citas);
 
         //Leer el contenido de la base de datos
@@ -112,7 +109,6 @@ class UI {
         }
 
         objectStore.openCursor().onsuccess = function(e){
-
             const cursor = e.target.result;
             if(cursor){
                 const {mascota, propietario, telefono, fecha, hora, sintomas, id} = cursor.value;
@@ -157,7 +153,7 @@ class UI {
                     eliminarCita(id);
                 }
 
-                //Boton Eliminar
+                //Boton Editar
                 const btnEditar = document.createElement('BUTTON');
                 btnEditar.classList.add('btn', 'btn-info', 'mr-2');
                 btnEditar.innerHTML = ' Editar <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>';
@@ -246,8 +242,11 @@ function nuevaCita(e) {
 
         //Insertar en IndexDB
         const transaccion = DB.transaction(['citas'], 'readwrite');
+
         const objectStore = transaccion.objectStore('citas');
+
         objectStore.add(citaObj);
+        
         transaccion.oncomplete = function(){
             // Mostrar mensaje de que todo esta bien...
             ui.imprimirAlerta('Se agregó correctamente')
@@ -295,7 +294,7 @@ function cargarEdicion(cita) {
 
     const {mascota, propietario, telefono, fecha, hora, sintomas, id } = cita;
 
-    // Reiniciar el objeto
+    // Llena el objeto
     citaObj.mascota = mascota;
     citaObj.propietario = propietario;
     citaObj.telefono = telefono;
@@ -323,7 +322,7 @@ function crearDB(){
     citasDB.onerror = function(){
         console.log('Hubo un error');
     }
-    citasDB.onsuccess = function(){
+    citasDB.onsuccess = function(){ 
         DB = citasDB.result;
         //Mostrar citas al cargar IndexDB
         ui.imprimirCitas()
