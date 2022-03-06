@@ -329,6 +329,7 @@ function crearDB(){
     }
     citasDB.onupgradeneeded = function(e){
         const db = e.target.result;
+        console.log(db);
         const objectStore = db.createObjectStore('citas',{
             keyPath: 'id',
             autoIncrement: true
